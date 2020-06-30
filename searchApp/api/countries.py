@@ -18,5 +18,8 @@ def getCountryList():
 
     context = {}
     context["countryList"] = countryList
+
+    response = flask.jsonify(**context)
+    response.headers.add('Access-Control-Allow-Origin', '*')
     
-    return flask.jsonify(**context)
+    return response
