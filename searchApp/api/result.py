@@ -4,7 +4,17 @@ import searchApp
 @searchApp.app.route('/api/outputList', methods=["GET"])
 def getOutputTypes():
     context = {}
-    context["outputTypes"] = ["URL List", "Article Freq Graph", "Title Common Terms"]
+    context["results"] = []
+    outputTypes =  ["URL List", "Article Freq Graph", "Title Common Terms"]
+
+    for i in range(len(outputTypes)):
+        context["results"].append(
+            {
+                "id": "outType" + str(i),
+                "name": outputTypes[i]
+            }
+        )
+    
     response = flask.jsonify(**context)
     response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Content-Type', 'application/json')

@@ -12,12 +12,17 @@ def getCountryList():
         countryLine = f.readline().rstrip('\n').split('\t')
         countryCode = countryLine[0]
         countryName = countryLine[1]
-        countryList.append({"code": countryCode, "name": countryName})
+        countryList.append(
+                {
+                "id": countryCode,
+                "name": countryName
+                }
+            )
     
     f.close()
 
     context = {}
-    context["countryList"] = countryList
+    context["results"] = countryList
 
     response = flask.jsonify(**context)
     response.headers.add('Access-Control-Allow-Origin', '*')
