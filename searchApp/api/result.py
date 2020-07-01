@@ -11,7 +11,8 @@ def getOutputTypes():
         context["results"].append(
             {
                 "id": "outType" + str(i),
-                "name": outputTypes[i]
+                "name": outputTypes[i],
+                "selected": 0
             }
         )
     

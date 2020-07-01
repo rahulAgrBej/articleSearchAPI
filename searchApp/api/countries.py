@@ -15,7 +15,8 @@ def getCountryList():
         countryList.append(
                 {
                 "id": countryCode,
-                "name": countryName
+                "name": countryName,
+                "selected": 0
                 }
             )
     
