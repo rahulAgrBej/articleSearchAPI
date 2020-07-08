@@ -21,10 +21,10 @@ def getOutputTypes():
     response.headers.add('Content-Type', 'application/json')
     return response
 
-@searchApp.app.route('/api/search', methods=["POST"])
+@searchApp.app.route('/api/search', methods=["GET", "POST"])
 def returnResults():
     context = {}
-    context["placeholder"] = "testing response"
+    context["placeholder"] = ["testing response"]
     response = flask.jsonify(**context)
     response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Content-Type', 'application/json')
