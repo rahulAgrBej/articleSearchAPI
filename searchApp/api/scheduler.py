@@ -88,7 +88,7 @@ def getUrlList(inList):
 
     urls = []
 
-    fullArtlist = getArtList(inList)
+    fullArtList = getArtList(inList)
     if len(fullArtList.keys()) > 0:
         articles = fullArtList['articles']
         for result in articles:
