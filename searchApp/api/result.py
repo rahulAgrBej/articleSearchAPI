@@ -20,7 +20,7 @@ def getOutputTypes():
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
-@searchApp.app.route('/api/search', methods=["GET", "POST"])
+@searchApp.app.route('/api/search', methods=["POST"])
 def returnResults():
     context = {}
     context["placeholder"] = ["testing response"]
