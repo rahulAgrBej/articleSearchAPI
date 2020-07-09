@@ -1,5 +1,6 @@
 import requests
 import json
+import searchApp
 
 MAX_ARTICLES = 250
 STRIPPED = lambda s: "".join(i for i in s if 31 < ord(i) < 127)

@@ -1,6 +1,6 @@
 import flask
 import searchApp
-import scheduler
+from searchApp.api import scheduler
 
 @searchApp.app.route('/api/outputList', methods=["GET"])
 def getOutputTypes():
