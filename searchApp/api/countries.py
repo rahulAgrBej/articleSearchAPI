@@ -1,7 +1,9 @@
 import flask
 import searchApp
+from flask_cors import cross_origin
 
 @searchApp.app.route('/api/countryList', methods=["GET"])
+@cross_origin()
 def getCountryList():
 
     f = open('searchApp/static/supportedCountries.txt', 'r')
