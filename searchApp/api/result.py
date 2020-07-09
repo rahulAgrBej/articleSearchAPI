@@ -1,5 +1,6 @@
 import flask
 import searchApp
+import scheduler
 
 @searchApp.app.route('/api/outputList', methods=["GET"])
 def getOutputTypes():
@@ -21,8 +22,21 @@ def getOutputTypes():
 
 @searchApp.app.route('/api/search', methods=["POST"])
 def returnResults():
-    context = {}
-    context["placeholder"] = ["testing response"]
+    req = request.json()
+
+    inList = []
+    inList.append(req['searchStr'])
+    inList.append(req['countries'][0])
+    inList.append(req['startDate'])
+    inList.append(req['startTime'])
+    inList.append(req['endDate'])
+    inList.append(req['endTime'])
+
+    urls = scheduler.getUrlList(inList)
+
+    context = {
+        'urlList': urls
+    }
 
     resp = flask.jsonify(**context)
     
