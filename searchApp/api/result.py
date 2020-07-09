@@ -1,9 +1,7 @@
 import flask
 import searchApp
-from flask_cors import cross_origin
 
 @searchApp.app.route('/api/outputList', methods=["GET"])
-@cross_origin()
 def getOutputTypes():
     context = {}
     context["results"] = []

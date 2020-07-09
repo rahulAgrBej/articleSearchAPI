@@ -1,9 +1,7 @@
 import flask
 import searchApp
-from flask_cors import cross_origin
 
 @searchApp.app.route('/api/countryList', methods=["GET"])
-@cross_origin()
 def getCountryList():
 
     f = open('searchApp/static/supportedCountries.txt', 'r')
@@ -28,5 +26,6 @@ def getCountryList():
     context["results"] = countryList
 
     response = flask.jsonify(**context)
+    response.headers.add("Access-Control-Allow-Origin", "*")
     
     return response
