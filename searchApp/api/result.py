@@ -22,7 +22,7 @@ def getOutputTypes():
 
 @searchApp.app.route('/api/search', methods=["POST"])
 def returnResults():
-    req = request.json()
+    req = flask.request.json()
 
     inList = []
     inList.append(req['searchStr'])
