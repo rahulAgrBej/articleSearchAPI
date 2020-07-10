@@ -1,6 +1,12 @@
 import flask
 import searchApp
 from searchApp.api import scheduler
+import math
+
+REQUESTERS = [
+    "",
+    ""
+]
 
 @searchApp.app.route('/api/outputList', methods=["GET"])
 def getOutputTypes():
@@ -24,6 +30,34 @@ def getOutputTypes():
 def returnResults():
     req = flask.request.json
 
+    # for each sourceCountry set up an individual request
+    reqList = []
+    sourceCountries = req["countries"]
+
+    for country in sourceCountries:
+        currReq = []
+
+        currReq.append(req["searchStr"])
+        currReq.append(country["id"])
+        currReq.append(req["startDate"])
+        currReq.append(req["startTime"])
+        currReq.append(req["endDate"])
+        currReq.append(req["endTime"])
+
+        reqList.append(currReq)
+    
+    if len(reqList) > len(REQUESTERS):
+        distr = math.floor(len(reqList) / len(REQUESTERS))
+        modulo = len(reqList) % len(REQUESTERS)
+        reqBatches = []
+        startIdx = 0
+        endIdx = distr
+    else:
+        # do this
+
+
+    """
+
     inList = []
     inList.append(req['searchStr'])
     inList.append(req['countries'][0])
@@ -41,3 +75,5 @@ def returnResults():
     resp = flask.jsonify(**context)
     
     return resp
+
+    """
