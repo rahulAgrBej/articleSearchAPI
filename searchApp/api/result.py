@@ -20,7 +20,7 @@ def getOutputTypes():
     resp = flask.jsonify(**context)
     return resp
 
-@searchApp.app.route('/api/search', methods=["POST"])
+@searchApp.app.route('/api/search', methods=["GET"])
 def returnResults():
     req = flask.request.json
 
