@@ -1,11 +1,12 @@
 import flask
 import searchApp
-from searchApp.api import scheduler
+from searchApp.api import scheduler, resultHelpers
 import math
+import json
 
+# "https://article-search-requester.herokuapp.com/api/sendReqs"
 REQUESTERS = [
-    "",
-    ""
+    "http://127.0.0.1:7000/api/sendReqs"
 ]
 
 @searchApp.app.route('/api/outputList', methods=["GET"])
@@ -38,42 +39,42 @@ def returnResults():
         currReq = []
 
         currReq.append(req["searchStr"])
-        currReq.append(country["id"])
+        currReq.append(country)
         currReq.append(req["startDate"])
         currReq.append(req["startTime"])
         currReq.append(req["endDate"])
         currReq.append(req["endTime"])
 
         reqList.append(currReq)
+
+    # a list of request batches for the requesters
+    reqBatches = []
     
     if len(reqList) > len(REQUESTERS):
-        distr = math.floor(len(reqList) / len(REQUESTERS))
-        modulo = len(reqList) % len(REQUESTERS)
-        reqBatches = []
+        minReqs = math.floor(len(reqList) / len(REQUESTERS))
+        remainderReqs = len(reqList) % len(REQUESTERS)
+
         startIdx = 0
-        endIdx = distr
+        endIdx = minReqs
+
+        for i in range(len(REQUESTERS)):
+
+            if remainderReqs != 0:
+                if i < remainderReqs:
+                    endIdx += 1
+            
+            reqBatches.append(reqList[startIdx:endIdx])
+            startIdx = endIdx
+            endIdx += minReqs
+
     else:
-        # do this
+        for i in range(len(reqList)):
+            reqBatches.append([reqList[i]])
 
+    for reqIdx in range(len(reqBatches)):
+        resp = resultHelpers.sendReqBatch(reqBatches[reqIdx], REQUESTERS[reqIdx])
+        print(json.loads(resp.text))
 
-    """
-
-    inList = []
-    inList.append(req['searchStr'])
-    inList.append(req['countries'][0])
-    inList.append(req['startDate'])
-    inList.append(req['startTime'])
-    inList.append(req['endDate'])
-    inList.append(req['endTime'])
-
-    urls = scheduler.getUrlList(inList)
-
-    context = {
-        'urlList': urls
-    }
-
-    resp = flask.jsonify(**context)
-    
-    return resp
-
-    """
+    context = {}
+    context["reqBatches"] = json.loads(resp.text)
+    return flask.jsonify(**context)
