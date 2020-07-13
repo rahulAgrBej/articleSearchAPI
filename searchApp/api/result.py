@@ -71,10 +71,28 @@ def returnResults():
         for i in range(len(reqList)):
             reqBatches.append([reqList[i]])
 
+    overallResults = {}
+    overallResults["granular"] = []
     for reqIdx in range(len(reqBatches)):
         resp = resultHelpers.sendReqBatch(reqBatches[reqIdx], REQUESTERS[reqIdx])
-        print(json.loads(resp.text))
+        results = json.loads(resp.text)["results"]
+        for res in results:
+            if res[0] == "granular":
+                granularReqs = resultHelpers.makeMoreGranular(res[1])
+                for newReq in granularReqs:
+                    overallResults["granular"].append(newReq)
+            elif res[0] == "results":
+                print(res[1][0])
+                print("TESTING")
+                print(type(res[1][0]))
+                if not (res[1][0]["sourcecountry"] in overallResults):
+                    overallResults[res[1][0]["sourcecountry"]] = []
+                
+                for articleHit in res[1]:
+                    overallResults[articleHit["sourcecountry"]].append(articleHit)
+
+
 
     context = {}
-    context["reqBatches"] = json.loads(resp.text)
+    context["reqBatches"] = overallResults
     return flask.jsonify(**context)
