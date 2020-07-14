@@ -51,6 +51,8 @@ def returnResults():
 
         reqsUnserviced.put(currReq)
     
+    overallResults = {}
+    
     while not reqsUnserviced.empty():
         batchSizes = resultHelpers.distributeBatches(reqsUnserviced.qsize(), len(REQUESTERS))
         startIdx = 0
@@ -63,7 +65,7 @@ def returnResults():
                 insertBatch.append(reqsUnserviced.get())
             currBatches.append(insertBatch)
         
-        overallResults = {}
+        
         # make multithreaded requests to requesters
         with concurrent.futures.ThreadPoolExecutor() as executor:
             
@@ -76,8 +78,10 @@ def returnResults():
             for f in concurrent.futures.as_completed(results):
                 print(f.result())
                 granularReqs = resultHelpers.summarizeResults(json.loads(f.result().text)["results"], overallResults)
-                #for gReq in granularReqs:
-                #    reqsUnserviced.put(gReq)
+                print("GRANULAR")
+                print(granularReqs)
+                for gReq in granularReqs:
+                    reqsUnserviced.put(gReq)
     
     response = {}
     response["articleResults"] = overallResults

@@ -90,10 +90,34 @@ def nextGranularSearch(startDate, startTime, endDate, endTime):
     return None
 
 def createDate(inDate):
-    return str(inDate.month) + '/' + str(inDate.day) + '/' + str(inDate.year)
+
+    month = str(inDate.month)
+    day = str(inDate.day)
+
+    if inDate.day < 10:
+        day = '0' + day
+    
+    if inDate.month < 10:
+        month = '0' + month
+
+    return month + '/' + day + '/' + str(inDate.year)
 
 def createTime(inDate):
-    return str(inDate.hour) + ':' + str(inDate.minute) + ':' + str(inDate.second)
+
+    hour = str(inDate.hour)
+    minute = str(inDate.minute)
+    second = str(inDate.second)
+
+    if inDate.hour < 10:
+        hour = '0' + hour
+
+    if inDate.minute < 10:
+        minute = '0' + minute
+    
+    if inDate.second < 10:
+        second = '0' + second
+    
+    return hour + ':' + minute + ':' + second
 
 def makeGranularReqs(reqList, nextGranularity):
 
