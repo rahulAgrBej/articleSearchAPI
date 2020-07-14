@@ -3,6 +3,9 @@ import searchApp
 from searchApp.api import scheduler, resultHelpers
 import math
 import json
+import queue
+import threading
+import concurrent.futures
 
 # "https://article-search-requester.herokuapp.com/api/sendReqs"
 REQUESTERS = [
@@ -30,11 +33,12 @@ def getOutputTypes():
 @searchApp.app.route('/api/search', methods=["GET"])
 def returnResults():
     req = flask.request.json
+    
+    reqsUnserviced = queue.Queue()
+    reqsServiced = {}
 
     # for each sourceCountry set up an individual request
-    reqList = []
     sourceCountries = req["countries"]
-
     for country in sourceCountries:
         currReq = []
 
@@ -45,54 +49,36 @@ def returnResults():
         currReq.append(req["endDate"])
         currReq.append(req["endTime"])
 
-        reqList.append(currReq)
-
-    # a list of request batches for the requesters
-    reqBatches = []
+        reqsUnserviced.put(currReq)
     
-    if len(reqList) > len(REQUESTERS):
-        minReqs = math.floor(len(reqList) / len(REQUESTERS))
-        remainderReqs = len(reqList) % len(REQUESTERS)
-
+    while not reqsUnserviced.empty():
+        batchSizes = resultHelpers.distributeBatches(reqsUnserviced.qsize(), len(REQUESTERS))
         startIdx = 0
-        endIdx = minReqs
+        endIdx = 0
+        currBatches = []
 
-        for i in range(len(REQUESTERS)):
-
-            if remainderReqs != 0:
-                if i < remainderReqs:
-                    endIdx += 1
+        for batchSize in batchSizes:
+            insertBatch = []
+            for i in range(batchSize):
+                insertBatch.append(reqsUnserviced.get())
+            currBatches.append(insertBatch)
+        
+        overallResults = {}
+        # make multithreaded requests to requesters
+        with concurrent.futures.ThreadPoolExecutor() as executor:
             
-            reqBatches.append(reqList[startIdx:endIdx])
-            startIdx = endIdx
-            endIdx += minReqs
-
-    else:
-        for i in range(len(reqList)):
-            reqBatches.append([reqList[i]])
-
-    overallResults = {}
-    overallResults["granular"] = []
-    for reqIdx in range(len(reqBatches)):
-        resp = resultHelpers.sendReqBatch(reqBatches[reqIdx], REQUESTERS[reqIdx])
-        results = json.loads(resp.text)["results"]
-        for res in results:
-            if res[0] == "granular":
-                granularReqs = resultHelpers.makeMoreGranular(res[1])
-                for newReq in granularReqs:
-                    overallResults["granular"].append(newReq)
-            elif res[0] == "results":
-                print(res[1][0])
-                print("TESTING")
-                print(type(res[1][0]))
-                if not (res[1][0]["sourcecountry"] in overallResults):
-                    overallResults[res[1][0]["sourcecountry"]] = []
-                
-                for articleHit in res[1]:
-                    overallResults[articleHit["sourcecountry"]].append(articleHit)
-
-
-
-    context = {}
-    context["reqBatches"] = overallResults
-    return flask.jsonify(**context)
+            results = []
+            requesterIdx = 0
+            for batch in currBatches:
+                results.append(executor.submit(resultHelpers.sendReqBatch, batch, REQUESTERS[requesterIdx]))
+                requesterIdx += 1
+            
+            for f in concurrent.futures.as_completed(results):
+                print(f.result())
+                granularReqs = resultHelpers.summarizeResults(json.loads(f.result().text)["results"], overallResults)
+                #for gReq in granularReqs:
+                #    reqsUnserviced.put(gReq)
+    
+    response = {}
+    response["articleResults"] = overallResults
+    return flask.jsonify(**response)

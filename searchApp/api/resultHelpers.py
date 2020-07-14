@@ -3,6 +3,7 @@ import json
 import searchApp
 from datetime import date
 import datetime
+import math
 
 def sendReqBatch(reqList, requesterURL):
 
@@ -13,6 +14,47 @@ def sendReqBatch(reqList, requesterURL):
     payload["reqListSent"] = json.dumps(reqListSent)
     resp = requests.get(requesterURL, params=payload)
     return resp
+
+def distributeBatches(numReqs, numRequesters):
+
+    distributions = []
+
+    if numReqs > numRequesters:
+        minReqs = math.floor(numReqs / numRequesters)
+        remainder = numReqs % numRequesters
+        
+        for reqIdx in range(numRequesters):
+            
+            distributions.append(minReqs)
+            if (remainder != 0) and reqIdx < remainder:
+                distributions[reqIdx] += 1
+    else:
+        for reqIdx in range(numReqs):
+            distributions.append(1)
+
+    return distributions
+
+def summarizeResults(respResults, overallResults):
+    granularReqs = []
+
+    for result in respResults:
+        if result[0] == "granular":
+            granularReqs.extend(makeMoreGranular(result[1]))
+        elif result[0] == "hits":
+            # guarantees results exist
+            for articleHit in result[1]:
+                sourceCountry = articleHit["sourcecountry"]
+                
+                if not (sourceCountry in overallResults):
+                    overallResults[sourceCountry] = []
+                
+                overallResults[sourceCountry].append(articleHit)
+        elif result[0] == "none":
+            sourceCountry = result[1]
+            if not (sourceCountry in overallResults):
+                overallResults[sourceCountry] = []
+
+    return granularReqs
 
 def nextGranularSearch(startDate, startTime, endDate, endTime):
     startDiv = startDate.split('/')
