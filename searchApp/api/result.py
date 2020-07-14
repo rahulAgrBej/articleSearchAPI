@@ -7,9 +7,9 @@ import queue
 import threading
 import concurrent.futures
 
-# "https://article-search-requester.herokuapp.com/api/sendReqs"
+# 
 REQUESTERS = [
-    "http://127.0.0.1:7000/api/sendReqs"
+    "https://article-search-requester.herokuapp.com/api/sendReqs"
 ]
 
 @searchApp.app.route('/api/outputList', methods=["GET"])
@@ -52,7 +52,7 @@ def returnResults():
         reqsUnserviced.put(currReq)
     
     overallResults = {}
-    
+
     while not reqsUnserviced.empty():
         batchSizes = resultHelpers.distributeBatches(reqsUnserviced.qsize(), len(REQUESTERS))
         startIdx = 0
