@@ -9,7 +9,8 @@ import concurrent.futures
 
 # 
 REQUESTERS = [
-    "https://article-search-requester.herokuapp.com/api/sendReqs"
+    "https://article-search-requester.herokuapp.com/api/sendReqs",
+    "https://article-search-requester1.herokuapp.com/api/sendReqs"
 ]
 
 @searchApp.app.route('/api/outputList', methods=["GET"])
