@@ -19,7 +19,7 @@ REQUESTERS = [
 def getOutputTypes():
     context = {}
     context["results"] = []
-    outputTypes =  ["URL List", "Article Freq Graph", "Title Common Terms"]
+    outputTypes =  ["Article Freq Graph"]
 
     for i in range(len(outputTypes)):
         context["results"].append(
