@@ -4,6 +4,10 @@ import searchApp
 from datetime import date
 import datetime
 import math
+import urllib
+
+def decodeParams(paramStr):
+    return json.loads(urllib.parse.unquote(paramStr))
 
 def sendReqBatch(reqList, requesterURL):
 

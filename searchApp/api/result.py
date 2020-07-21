@@ -36,20 +36,24 @@ def getOutputTypes():
 @searchApp.app.route('/api/searchTrends', methods=['GET'])
 def returnTrends():
 
-    req = flask.request.json
-    sourceCountries = req['countries']
+    sourceCountries = resultHelpers.decodeParams(flask.request.args.get('countries'))
+    searchQuery = resultHelpers.decodeParams(flask.request.args.get('q'))
+    startDate = resultHelpers.decodeParams(flask.request.args.get('startDate'))
+    startTime = resultHelpers.decodeParams(flask.request.args.get('startTime'))
+    endDate = resultHelpers.decodeParams(flask.request.args.get('endDate'))
+    endTime = resultHelpers.decodeParams(flask.request.args.get('endTime'))
 
     reqsUnserviced = queue.Queue()
 
     for country in sourceCountries:
         currReq = []
 
-        currReq.append(req["searchStr"])
+        currReq.append(searchQuery)
         currReq.append(country)
-        currReq.append(req["startDate"])
-        currReq.append(req["startTime"])
-        currReq.append(req["endDate"])
-        currReq.append(req["endTime"])
+        currReq.append(startDate)
+        currReq.append(startTime)
+        currReq.append(endDate)
+        currReq.append(endTime)
 
         reqsUnserviced.put(currReq)
 
