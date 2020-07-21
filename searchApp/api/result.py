@@ -69,19 +69,20 @@ def returnTrends():
                 insertBatch.append(reqsUnserviced.get())
             currBatches.append(insertBatch)
         
-        
         # make multithreaded requests to requesters
         with concurrent.futures.ThreadPoolExecutor() as executor:
             
             results = []
             requesterIdx = 0
             for batch in currBatches:
+                print(batch)
+                print()
                 results.append(executor.submit(resultHelpers.sendReqBatch, batch, REQUESTERS[requesterIdx]))
                 requesterIdx += 1
             
             for f in concurrent.futures.as_completed(results):
-                requestResponse["results"].append(f.result().json())
-                print(f.result().json())
+                requestResponse["results"].extend(f.result().json()['results'])
+                print('here')
 
     return flask.jsonify(**requestResponse)
 
