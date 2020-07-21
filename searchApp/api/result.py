@@ -75,14 +75,11 @@ def returnTrends():
             results = []
             requesterIdx = 0
             for batch in currBatches:
-                print(batch)
-                print()
                 results.append(executor.submit(resultHelpers.sendReqBatch, batch, REQUESTERS[requesterIdx]))
                 requesterIdx += 1
             
             for f in concurrent.futures.as_completed(results):
                 requestResponse["results"].extend(f.result().json()['results'])
-                print('here')
 
     return flask.jsonify(**requestResponse)
 
