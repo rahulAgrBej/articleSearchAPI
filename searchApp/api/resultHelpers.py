@@ -11,7 +11,7 @@ def sendReqBatch(reqList, requesterURL):
     
     reqListSent = {}
     reqListSent["requests"] = reqList
-    payload["reqListSent"] = json.dumps(reqListSent)
+    payload["trendReqs"] = json.dumps(reqListSent)
     resp = requests.get(requesterURL, params=payload)
     return resp
 
