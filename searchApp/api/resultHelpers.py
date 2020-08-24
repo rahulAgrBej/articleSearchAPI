@@ -19,6 +19,16 @@ def sendReqBatch(reqList, requesterURL):
     resp = requests.get(requesterURL, params=payload)
     return resp
 
+def sendFullReq(reqList, requesterURL):
+
+    payload = {}
+    
+    reqListSent = {}
+    reqListSent["requests"] = reqList
+    payload["fullReqs"] = json.dumps(reqListSent)
+    resp = requests.get(requesterURL, params=payload)
+    return resp
+
 def distributeBatches(numReqs, numRequesters):
 
     distributions = []
