@@ -107,26 +107,12 @@ def returnTrends():
 @searchApp.app.route('/api/getFullInfo', methods=["GET"])
 def returnFullInfo():
 
-    sourceCountries = resultHelpers.decodeParams(flask.request.args.get('countries'))
-    searchQuery = resultHelpers.decodeParams(flask.request.args.get('q'))
-    startDate = resultHelpers.decodeParams(flask.request.args.get('startDate'))
-    startTime = resultHelpers.decodeParams(flask.request.args.get('startTime'))
-    endDate = resultHelpers.decodeParams(flask.request.args.get('endDate'))
-    endTime = resultHelpers.decodeParams(flask.request.args.get('endTime'))
+    incomingReqs = resultHelpers.decodeParams(flask.request.args.get('requestsSent'))
 
     reqsUnserviced = queue.Queue()
 
-    for country in sourceCountries:
-        currReq = []
-
-        currReq.append(searchQuery)
-        currReq.append(country)
-        currReq.append(startDate)
-        currReq.append(startTime)
-        currReq.append(endDate)
-        currReq.append(endTime)
-
-        reqsUnserviced.put(currReq)
+    for iR in incomingReqs:
+        reqsUnserviced.put(iR)
     
     requestResponse = {}
     requestResponse["results"] = []
