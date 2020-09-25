@@ -7,10 +7,12 @@ import queue
 import threading
 import concurrent.futures
 
-# 
 REQUESTERS = [
     "https://article-search-requester.herokuapp.com/api/getTrends",
-    "https://article-search-requester1.herokuapp.com/api/getTrends"
+    "https://article-search-requester1.herokuapp.com/api/getTrends",
+    "https://article-search-requester2.herokuapp.com/api/getTrends",
+    "https://article-search-requester3.herokuapp.com/api/getTrends",
+    "https://article-search-requester4.herokuapp.com/api/getTrends"
 ]
 
 REQUESTERS_FULL_INFO = [
@@ -106,7 +108,6 @@ def returnTrends():
 
 @searchApp.app.route('/api/getFullInfo', methods=["GET"])
 def returnFullInfo():
-
     incomingReqs = resultHelpers.decodeParams(flask.request.args.get('requestsSent'))
 
     reqsUnserviced = queue.Queue()
