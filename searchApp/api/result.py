@@ -23,7 +23,6 @@ REQUESTERS_FULL_INFO = [
     "https://article-search-requester4.herokuapp.com/api/getFullInfo"
 ]
 
-
 @searchApp.app.route('/api/outputList', methods=["GET"])
 def getOutputTypes():
     context = {}
@@ -45,30 +44,11 @@ def getOutputTypes():
 @searchApp.app.route('/api/searchTrends', methods=['GET'])
 def returnTrends():
 
-    sourceCountries = resultHelpers.decodeParams(flask.request.args.get('countries'))
-    searchQuery = resultHelpers.decodeParams(flask.request.args.get('q'))
-    startDate = resultHelpers.decodeParams(flask.request.args.get('startDate'))
-    startTime = resultHelpers.decodeParams(flask.request.args.get('startTime'))
-    endDate = resultHelpers.decodeParams(flask.request.args.get('endDate'))
-    endTime = resultHelpers.decodeParams(flask.request.args.get('endTime'))
-
-    print("HERE HERH EHREHRHEHRE H")
-    print(sourceCountries)
-
     reqsUnserviced = queue.Queue()
+    incomingReqs = resultHelpers.decodeParams(flask.request.args.get('requestsSent'))
 
-    for country in sourceCountries:
-        currReq = []
-
-        currReq.append(searchQuery)
-        currReq.append(country)
-        currReq.append(startDate)
-        currReq.append(startTime)
-        currReq.append(endDate)
-        currReq.append(endTime)
-
-        reqsUnserviced.put(currReq)
-
+    for iR in incomingReqs:
+        reqsUnserviced.put(iR)
     
     requestResponse = {}
     requestResponse["results"] = []
