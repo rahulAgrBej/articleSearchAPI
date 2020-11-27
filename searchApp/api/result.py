@@ -12,7 +12,12 @@ REQUESTERS = [
     "https://article-search-requester1.herokuapp.com/api/getTrends",
     "https://article-search-requester2.herokuapp.com/api/getTrends",
     "https://article-search-requester3.herokuapp.com/api/getTrends",
-    "https://article-search-requester4.herokuapp.com/api/getTrends"
+    "https://article-search-requester4.herokuapp.com/api/getTrends",
+    "https://article-search-requester5.herokuapp.com/api/getTrends",
+    "https://article-search-requester6.herokuapp.com/api/getTrends",
+    "https://article-search-requester7.herokuapp.com/api/getTrends",
+    "https://article-search-requester8.herokuapp.com/api/getTrends",
+    "https://article-search-requester9.herokuapp.com/api/getTrends"
 ]
 
 REQUESTERS_FULL_INFO = [
@@ -20,7 +25,12 @@ REQUESTERS_FULL_INFO = [
     "https://article-search-requester1.herokuapp.com/api/getFullInfo",
     "https://article-search-requester2.herokuapp.com/api/getFullInfo",
     "https://article-search-requester3.herokuapp.com/api/getFullInfo",
-    "https://article-search-requester4.herokuapp.com/api/getFullInfo"
+    "https://article-search-requester4.herokuapp.com/api/getFullInfo",
+    "https://article-search-requester5.herokuapp.com/api/getFullInfo",
+    "https://article-search-requester6.herokuapp.com/api/getFullInfo",
+    "https://article-search-requester7.herokuapp.com/api/getFullInfo",
+    "https://article-search-requester8.herokuapp.com/api/getFullInfo",
+    "https://article-search-requester9.herokuapp.com/api/getFullInfo"
 ]
 
 @searchApp.app.route('/api/outputList', methods=["GET"])
