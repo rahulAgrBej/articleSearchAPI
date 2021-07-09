@@ -17,6 +17,9 @@ def sendReqBatch(reqList, requesterURL):
     reqListSent["requests"] = reqList
     payload["trendReqs"] = json.dumps(reqListSent)
     resp = requests.get(requesterURL, params=payload)
+
+    if (resp.status_code == 500):
+        print(resp.content)
     return resp
 
 def sendFullReq(reqList, requesterURL):

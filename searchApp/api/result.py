@@ -85,7 +85,7 @@ def returnTrends():
                 requesterIdx += 1
             
             for f in concurrent.futures.as_completed(results):
-                print(f.result())
+                #print(f.result())
                 requestResponse["results"].extend(f.result().json()['results'])
 
     print(requestResponse)
