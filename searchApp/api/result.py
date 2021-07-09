@@ -130,7 +130,10 @@ def returnFullInfo():
                 requesterIdx += 1
             
             for f in concurrent.futures.as_completed(results):
-                requestResponse["results"].extend(f.result().json()['results'])
+                try:
+                    requestResponse["results"].extend(f.result().json()['results'])
+                except:
+                    print(f.result().content)
     
     return flask.jsonify(**requestResponse)
 
